@@ -9,12 +9,13 @@ package appcoffee;
  * @author Admin
  */
 public class frmMainCoffee extends javax.swing.JFrame {
-
+    
     /**
      * Creates new form frmMainCoffee
      */
     public frmMainCoffee() {
         initComponents();
+        // hello
     }
 
     /**
@@ -359,7 +360,6 @@ public class frmMainCoffee extends javax.swing.JFrame {
 
         jMenu1.setText("Tài Khoản");
 
-        jMenuItem1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/User.png"))); // NOI18N
         jMenuItem1.setText("Thông tin cá nhân");
         jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -369,7 +369,6 @@ public class frmMainCoffee extends javax.swing.JFrame {
         jMenu1.add(jMenuItem1);
         jMenu1.add(jSeparator1);
 
-        jMenuItem3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/Log out.png"))); // NOI18N
         jMenuItem3.setText("Đăng xuất");
         jMenu1.add(jMenuItem3);
 
@@ -377,7 +376,6 @@ public class frmMainCoffee extends javax.swing.JFrame {
 
         jMenu2.setText("Quản Lý");
 
-        jMenuItem2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/Home.png"))); // NOI18N
         jMenuItem2.setText("Kho");
         jMenu2.add(jMenuItem2);
 
