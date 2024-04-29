@@ -68,7 +68,7 @@ public final class DB_Connect {
         String url = "jdbc:sqlserver://localhost:1433;databaseName=" + db;
         Connection conn;
         conn = DriverManager.getConnection(url, user, pass);
-        if (this.con != null) {
+        if (conn != null) {
             JOptionPane.showMessageDialog(null, "kết nối thành công");
             return conn;
         }

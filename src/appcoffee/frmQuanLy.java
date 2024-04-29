@@ -9,6 +9,7 @@ import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.sql.*;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -21,11 +22,14 @@ public class frmQuanLy extends javax.swing.JFrame {
      * Creates new form frmQuanLy
      */
     DB_Connect conn;
-    DSMon dsmon;
-    public frmQuanLy() throws SQLException, ClassNotFoundException {
+    DSMon dsMon;
+    DSLoai dsLoai;
+    public frmQuanLy() {
         initComponents();
-        conn = new DB_Connect("sa", "123", "QLCaPhe");
-        dsmon = new DSMon();
+        dsMon = new DSMon();
+        dsLoai = new DSLoai();
+        pnlXoaSua_Mon.setVisible(false);
+        
     }
 
     /**
@@ -61,7 +65,7 @@ public class frmQuanLy extends javax.swing.JFrame {
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
-        jComboBox1 = new javax.swing.JComboBox<>();
+        cboLoai_Mon = new javax.swing.JComboBox<>();
         chkXoaSua_Mon = new javax.swing.JCheckBox();
         pnlXoaSua_Mon = new javax.swing.JPanel();
         jLabel6 = new javax.swing.JLabel();
@@ -229,9 +233,12 @@ public class frmQuanLy extends javax.swing.JFrame {
 
         jLabel5.setText("Tình trạng");
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-
         chkXoaSua_Mon.setText("Xóa/Sửa Món");
+        chkXoaSua_Mon.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                chkXoaSua_MonActionPerformed(evt);
+            }
+        });
 
         pnlXoaSua_Mon.setBorder(javax.swing.BorderFactory.createTitledBorder("Xóa/Sửa Món"));
 
@@ -260,13 +267,10 @@ public class frmQuanLy extends javax.swing.JFrame {
 
         tblMon.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+                "Quản Lý Món"
             }
         ));
         jScrollPane1.setViewportView(tblMon);
@@ -294,7 +298,7 @@ public class frmQuanLy extends javax.swing.JFrame {
                     .addGroup(panelMonLayout.createSequentialGroup()
                         .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jComboBox1, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(cboLoai_Mon, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addComponent(chkXoaSua_Mon)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelMonLayout.createSequentialGroup()
                         .addComponent(txtTim_Mon)
@@ -352,7 +356,7 @@ public class frmQuanLy extends javax.swing.JFrame {
                         .addGap(18, 18, 18)
                         .addGroup(panelMonLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel5)
-                            .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(cboLoai_Mon, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(37, 37, 37)
                         .addComponent(chkXoaSua_Mon)
                         .addGap(37, 37, 37)
@@ -811,7 +815,24 @@ public class frmQuanLy extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
     //Function for Loai
+    private void readData_Loai() throws SQLException {
+        String sql = "select * from Loai";
+        ResultSet rs = conn.getReader(sql);
+        while(rs.next()) {
+            int idLoai = Integer.parseInt(rs.getString("idLoai"));
+            String ten = String.valueOf(rs.getString("tenLoai"));
+            Loai loai = new Loai(idLoai, ten);
+            dsLoai.themLoai(loai);
+        }
+    }
     
+    private void load_CBOLoai() throws SQLException {
+        DefaultComboBoxModel<Loai> cboLoai = (DefaultComboBoxModel)cboLoai_Mon.getModel();
+        readData_Loai();
+        for(Loai loai : dsLoai.dsLoai) {
+            cboLoai.addElement(loai);
+        }
+    }
     //Function for Mon
     
     private String[] getColumn_Data(ResultSet rs) throws SQLException {
@@ -834,8 +855,12 @@ public class frmQuanLy extends javax.swing.JFrame {
             String moTa = String.valueOf(rs.getString("moTa"));
             int trangThai = Integer.parseInt(rs.getString("trangThai"));
             Mon mon = new Mon(idMon, idLoai, gia, ten, moTa, trangThai);
-            dsmon.themMon(mon);
+            dsMon.themMon(mon);
         }
+    }
+    
+    private void themMon(int idMon, String tenMon, int idLoai, int gia, String moTa, int trangThai) {
+        
     }
     
     
@@ -848,10 +873,9 @@ public class frmQuanLy extends javax.swing.JFrame {
             ResultSet rs = conn.getReader(sql);
             String[] columnNames = getColumn_Data(rs);
             readData_Mon(rs);
-            DefaultTableModel model = new DefaultTableModel();
-            model.setColumnIdentifiers(columnNames);
-            for(Mon mon : dsmon.dsmon) {
-                Object[] rowData = {mon.getIdMon(), mon.getTen(), mon.getGia(), mon.getIdLoai(), mon.getTrangThai(), mon.getMoTa()};
+            tblModel.setColumnIdentifiers(columnNames);
+            for(Mon mon : dsMon.dsmon) {
+                Object[] rowData = {mon.getIdMon(), mon.getTen(), mon.getIdLoai(), mon.getGia(), mon.getMoTa(), mon.getTrangThai()};
                 tblModel.addRow(rowData);
             }
         } catch (SQLException ex) {
@@ -867,9 +891,30 @@ public class frmQuanLy extends javax.swing.JFrame {
     }//GEN-LAST:event_chkXoaSua_TaiKhoanActionPerformed
 
     private void btnXem_MonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnXem_MonActionPerformed
-        // TODO add your handling code here:
+        try {
+            conn = new DB_Connect("sa", "123", "QLCaPhe");
+        } catch (SQLException ex) {
+            Logger.getLogger(frmQuanLy.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(frmQuanLy.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        try {
+            load_CBOLoai();
+        } catch (SQLException ex) {
+            Logger.getLogger(frmQuanLy.class.getName()).log(Level.SEVERE, null, ex);
+        }
         xemMon();
     }//GEN-LAST:event_btnXem_MonActionPerformed
+
+    private void chkXoaSua_MonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chkXoaSua_MonActionPerformed
+        // TODO add your handling code here:
+        if(chkXoaSua_Mon.isSelected()) {
+            pnlXoaSua_Mon.setVisible(true);
+        }
+        else {
+            pnlXoaSua_Mon.setVisible(false);
+        }
+    }//GEN-LAST:event_chkXoaSua_MonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -901,14 +946,7 @@ public class frmQuanLy extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                try {
-                    new frmQuanLy().setVisible(true);
-                } catch (SQLException ex) {
-                    Logger.getLogger(frmQuanLy.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (ClassNotFoundException ex) {
-                    Logger.getLogger(frmQuanLy.class.getName()).log(Level.SEVERE, null, ex);
-                }
-             
+                new frmQuanLy().setVisible(true);
             }
         });
     }
@@ -934,12 +972,12 @@ public class frmQuanLy extends javax.swing.JFrame {
     private javax.swing.JButton btnXoa_Loai;
     private javax.swing.JButton btnXoa_Mon;
     private javax.swing.JButton btnXoa_TaiKhoan;
+    private javax.swing.JComboBox<String> cboLoai_Mon;
     private javax.swing.JCheckBox chkXoaSua_Ban;
     private javax.swing.JCheckBox chkXoaSua_Loai;
     private javax.swing.JCheckBox chkXoaSua_Mon;
     private javax.swing.JCheckBox chkXoaSua_TaiKhoan;
     private javax.swing.JButton jButton21;
-    private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JComboBox<String> jComboBox2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
