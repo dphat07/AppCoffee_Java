@@ -4,17 +4,54 @@
  */
 package appcoffee;
 
+import java.sql.ResultSet;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author Admin
  */
 public class frmEditUser extends javax.swing.JFrame {
 
+    public String User; // tên user
+    public String Chucvu; // lưu chức vụ
+    public String Tenhienthi; // lưu tên hiển thị
+    connectSql cntSql;
+    ResultSet rs; // lưu dữ liệu đọc từ SqlDataReader
     /**
      * Creates new form frmEditUser
      */
-    public frmEditUser() {
+    
+    public frmEditUser() { 
+        initComponents();  
+        String ur = "sa";
+        String ps = "123456";
+        String u = "jdbc:sqlserver://localhost:1433;databaseName=QLCaPhe;encrypt=true;trustServerCertificate=true";
+        cntSql = new connectSql(ur, ps, u);
+        txtOldPassword.setEnabled(false);            
+        txtNewPassword.setEnabled(false);
+        txtAgainNewPassword.setEnabled(false);
+    }
+    
+    public frmEditUser(String user, String chucvu, String tenhienthi) {
         initComponents();
+                
+        // hello
+        String ur = "sa";
+        String ps = "123456";
+        String u = "jdbc:sqlserver://localhost:1433;databaseName=QLCaPhe;encrypt=true;trustServerCertificate=true";
+        cntSql = new connectSql(ur, ps, u);
+        
+        this.User = user.replaceAll("\\s+", ""); // gán tên đăng nhập
+        this.Chucvu = chucvu.replaceAll("\\s+", ""); // gán chức vụ
+        this.Tenhienthi = tenhienthi.replaceAll("\\s+", ""); // gán tên hiển thị
+        
+        txtTenTK.setText(User);
+        txtTenHT.setText(Tenhienthi);
+        
+        txtOldPassword.setEnabled(false);            
+        txtNewPassword.setEnabled(false);
+        txtAgainNewPassword.setEnabled(false);
     }
 
     /**
@@ -53,6 +90,12 @@ public class frmEditUser extends javax.swing.JFrame {
 
         jLabel4.setText("Thay đổi mật khẩu");
 
+        chkChangeMK.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                chkChangeMKActionPerformed(evt);
+            }
+        });
+
         jLabel5.setText("Mật khẩu cũ");
 
         jLabel6.setText("Mật khẩu mới");
@@ -60,6 +103,11 @@ public class frmEditUser extends javax.swing.JFrame {
         jLabel7.setText("Nhập lại mật khẩu");
 
         btnThayDoi.setText("Thay Đổi");
+        btnThayDoi.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnThayDoiActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -134,6 +182,61 @@ public class frmEditUser extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btnThayDoiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnThayDoiActionPerformed
+        // TODO add your handling code here:
+        if (!txtNewPassword.getText().equals(txtAgainNewPassword.getText())) // check nếu mật khẩu mới mà nhập lại mẫu khẩu không khớp thì thay đổi không thành cônc
+        {
+            JOptionPane.showMessageDialog(rootPane, "Mật khẩu mới không khớp với nhau");
+            return;
+        }
+        // cập nhật lại mật khẩu mới nếu đúng tài khoản và nhập đúng mật khẩu cũ
+        //string sql = "Update TaiKhoan set matKhau = '" + txtmknew.Text + "' Where matKhau ='" + txtmkold.Text + "' AND tenDangNhap ='" + txttentk.Text + "'";
+        //int kq = db.GetNonQuery(sql);
+        else
+        {
+            String str = "SELECT matKhau FROM TaiKhoan WHERE tenDangNhap ='"+User.trim()+"'";
+            try {
+                rs = cntSql.getQuery(str);
+                rs.next();
+                String mk = rs.getString("matKhau").replaceAll("\\s+", "");
+                if(mk.equals(txtOldPassword.getText()))
+                {
+                    str = "Update TaiKhoan set matKhau = '" + txtNewPassword.getText() + "' Where matKhau ='" + txtOldPassword.getText() + "' AND tenDangNhap ='" + User + "'";
+                    cntSql.getUpdateQuery(str);
+                    JOptionPane.showMessageDialog(rootPane, "Thay đổi thành công");
+                    txtOldPassword.setText("");
+                    txtNewPassword.setText("");
+                    txtAgainNewPassword.setText("");
+                }
+                else
+                {
+                    JOptionPane.showMessageDialog(rootPane, "Mật khẩu cũ không đúng");
+                }
+            } catch (Exception e) {
+            } 
+        }
+        txtOldPassword.setEnabled(false);            
+        txtNewPassword.setEnabled(false);
+        txtAgainNewPassword.setEnabled(false);
+        chkChangeMK.setSelected(false);
+    }//GEN-LAST:event_btnThayDoiActionPerformed
+
+    private void chkChangeMKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chkChangeMKActionPerformed
+        // TODO add your handling code here:
+        if(chkChangeMK.isSelected())
+        {
+            txtOldPassword.setEnabled(true);            
+            txtNewPassword.setEnabled(true);
+            txtAgainNewPassword.setEnabled(true);
+        }
+        else
+        {
+            txtOldPassword.setEnabled(false);            
+            txtNewPassword.setEnabled(false);
+            txtAgainNewPassword.setEnabled(false);
+        }
+    }//GEN-LAST:event_chkChangeMKActionPerformed
 
     /**
      * @param args the command line arguments

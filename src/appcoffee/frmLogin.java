@@ -4,17 +4,26 @@
  */
 package appcoffee;
 
+import java.sql.ResultSet;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author Admin
  */
 public class frmLogin extends javax.swing.JFrame {
-
+    ResultSet rs; // lưu dữ liệu đọc từ SqlDataReader
+    connectSql cntSql;
     /**
      * Creates new form frmLogin
      */
     public frmLogin() {
         initComponents();
+        
+        String ur = "sa";
+        String ps = "123456";
+        String u = "jdbc:sqlserver://localhost:1433;databaseName=QLCaPhe;encrypt=true;trustServerCertificate=true";
+        cntSql = new connectSql(ur, ps, u);
     }
 
     /**
@@ -46,6 +55,11 @@ public class frmLogin extends javax.swing.JFrame {
         jLabel3.setText("Đăng Nhập");
 
         btnLogin.setText("Đăng nhập");
+        btnLogin.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLoginActionPerformed(evt);
+            }
+        });
 
         btnExit.setText("Thoát");
 
@@ -55,21 +69,23 @@ public class frmLogin extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(34, 34, 34)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel1)
-                    .addComponent(jLabel2))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel1)
+                            .addComponent(jLabel2))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(txtPassword, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 237, Short.MAX_VALUE)
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                .addGap(54, 54, 54)
+                                .addComponent(jLabel3))
+                            .addComponent(txtUserName)))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(btnLogin)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 77, Short.MAX_VALUE)
-                        .addComponent(btnExit))
-                    .addComponent(txtPassword, javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                        .addGap(54, 54, 54)
-                        .addComponent(jLabel3))
-                    .addComponent(txtUserName))
-                .addContainerGap(44, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnExit)))
+                .addContainerGap(41, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -88,11 +104,45 @@ public class frmLogin extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnLogin)
                     .addComponent(btnExit))
-                .addContainerGap(88, Short.MAX_VALUE))
+                .addContainerGap(20, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
+        // TODO add your handling code here:
+        String str = "SELECT 1 as KQ FROM TaiKhoan WHERE tenDangNhap = '"+ txtUserName.getText() +"' AND matKhau = '"+ txtPassword.getText() +"'";
+        rs = cntSql.getQuery(str);
+        try {
+            rs.next();
+            if (rs.getInt("KQ") == 1) // nếu không có tài khoản nào trong database thì mật khẩu hoặc tài khoản không đúng
+            {
+                str = "select tenDangNhap from TaiKhoan where tenDangNhap = '" + txtUserName.getText() + "'AND matKhau = '" + txtPassword.getText() + "' ";
+                rs = cntSql.getQuery(str);
+                rs.next();
+                String user = rs.getString("tenDangNhap"); // dùng lệnh select tenDangNhap để bắt lại tên đăng nhập của nhân viên 
+                str = "select chucVu from TaiKhoan where tenDangNhap = '" + txtUserName.getText() + "'AND matKhau = '" + txtPassword.getText() + "' ";
+                rs = cntSql.getQuery(str);
+                rs.next();
+                String chucvu = rs.getString("chucVu"); // dùng lệnh select  chucVu để bắt lại chức vụ của tài khoản đó để kiểm tra là nhân viên hay là quản lý
+                str = "select tenHienThi from TaiKhoan where tenDangNhap = '" + txtUserName.getText() + "'AND matKhau = '" + txtPassword.getText() + "' "; 
+                rs = cntSql.getQuery(str);
+                rs.next();
+                String tenhienthi = rs.getString("tenHienThi"); // dùng lệnh  select tenHienThi để bắt lại tên hiển thị của nhân viên
+                frmMainCoffee f1 = new frmMainCoffee(user, chucvu, tenhienthi);
+
+                // Hiển thị Form2
+                f1.setVisible(true);
+                // Đóng Form1
+                this.dispose();
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(rootPane, "Tài khoản hoặc mật khẩu không đúng !");
+            txtUserName.setText("");
+            txtPassword.setText("");
+        }
+    }//GEN-LAST:event_btnLoginActionPerformed
 
     /**
      * @param args the command line arguments
