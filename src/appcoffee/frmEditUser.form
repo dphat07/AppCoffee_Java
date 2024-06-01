@@ -138,6 +138,9 @@
       </Properties>
     </Component>
     <Component class="javax.swing.JCheckBox" name="chkChangeMK">
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="chkChangeMKActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel5">
       <Properties>
@@ -158,6 +161,9 @@
       <Properties>
         <Property name="text" type="java.lang.String" value="Thay &#x110;&#x1ed5;i"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnThayDoiActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JTextField" name="txtTenTK">
     </Component>
