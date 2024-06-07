@@ -5,12 +5,16 @@
 package appcoffee;
 
 import appcoffee.Model.Mon;
+import java.awt.Button;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
+import java.awt.GridLayout;
+import java.awt.Image;
 import java.awt.Panel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.sql.ResultSet;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -478,7 +482,7 @@ public class frmMainCoffee extends javax.swing.JFrame {
         jMenu1.setText("Tài Khoản");
 
         jMenuItem1.setText("Thông tin cá nhân");
-        jMenuItem1.setPreferredSize(new java.awt.Dimension(100, 22));
+        jMenuItem1.setPreferredSize(new java.awt.Dimension(250, 22));
         jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenuItem1ActionPerformed(evt);
@@ -522,7 +526,7 @@ public class frmMainCoffee extends javax.swing.JFrame {
                 .addComponent(pnl_4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap(380, Short.MAX_VALUE)
                 .addComponent(jLabel1)
                 .addGap(341, 341, 341))
         );
@@ -623,13 +627,6 @@ public class frmMainCoffee extends javax.swing.JFrame {
             }    
             typeClose = 0;
     }//GEN-LAST:event_formWindowClosing
-
-    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
-        // TODO add your handling code here:
-        frmEditUser f1 = new frmEditUser(User, Chucvu, Tenhienthi);
-        f1.setVisible(true);
-        this.dispose();
-    }//GEN-LAST:event_jMenuItem1ActionPerformed
 
     private void cob_monCaretPositionChanged(java.awt.event.InputMethodEvent evt) {//GEN-FIRST:event_cob_monCaretPositionChanged
         // TODO add your handling code here:
@@ -950,6 +947,13 @@ public class frmMainCoffee extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(rootPane, "Không thể thanh toán khi chưa có sản phẩm!");
     }//GEN-LAST:event_btn_thanhToanActionPerformed
 
+    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+        // TODO add your handling code here:
+        frmEditUser f1 = new frmEditUser(User, Chucvu, Tenhienthi);
+        f1.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_jMenuItem1ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -1128,11 +1132,12 @@ public class frmMainCoffee extends javax.swing.JFrame {
         return true;
     }
     
-     public void loadBan()
+    public void loadBan()
     {
         String str = "select * from Ban";
         rs = cntSql.getQuery(str); // gán giá trị cho rdr
         try {
+            pnl_2.setLayout(new GridLayout(0, 3, 10, 10)); 
             while (rs.next())
             {
                 JButton btn = new JButton(rs.getString("tenBan").toString());
@@ -1148,7 +1153,24 @@ public class frmMainCoffee extends javax.swing.JFrame {
                 else // kiểm tra nếu trạng thái mà true thì xám
                     btn.setBackground(Color.DARK_GRAY);
                 btn.setSize(112, 94);
+                ImageIcon image1;
+                if(rs.getInt("soGhe") == 2)
+                {
+                    image1=new ImageIcon("src\\image\\Ban2.png");
+                }
+                else if(rs.getInt("soGhe") == 3)
+                {
+                    image1=new ImageIcon("src\\image\\Ban3.png");
+                }
+                else 
+                {
+                    image1=new ImageIcon("src\\image\\Ban4.png");
+                }
+                Image im=image1.getImage();
+                ImageIcon icon=new ImageIcon(im.getScaledInstance(30, 30, im.SCALE_SMOOTH));
+                btn.setIcon(icon);
                 pnl_2.add(btn);
+
             }
         } catch (Exception e) {        
         }
@@ -1228,33 +1250,13 @@ public class frmMainCoffee extends javax.swing.JFrame {
         }
         return id;
     }
-//
-//    public void loadHinh(String image)
+
+//    public void loadHinh(JButton btn, String image)
 //    {
-//        ImageIcon image1=new ImageIcon("src\\qlbanhang_kholinhkiensi\\sanphamcongty_2022\\"+image);
+//        ImageIcon image1=new ImageIcon("src\\image\\"+image);
 //        Image im=image1.getImage();
-//        ImageIcon icon=new ImageIcon(im.getScaledInstance(lblHinh.getWidth(), 
-//                lblHinh.getHeight(), im.SCALE_SMOOTH));
-//       lblHinh.setIcon(icon);
-//        
-//    }
-//    private String ChonHinh()
-//    {
-//        JFileChooser open=new JFileChooser();
-//        // Thiết lập đường dẫn mặc định cho JFileChooser
-//        File defaultDirectory = new File("src\\ASM1\\images");
-//        open.setCurrentDirectory(defaultDirectory);
-//            int kq=open.showOpenDialog(null);
-//            String hinh="";  
-//            if(kq==open.APPROVE_OPTION)
-//            {         
-//                File f=open.getSelectedFile();
-//                String filename=f.getAbsolutePath();
-//                // String []chuoi=filename.split("\\\\");
-//                // hinh=chuoi[chuoi.length-1]; 
-//                hinh=f.getName();
-//            }
-//           return hinh;
+//        ImageIcon icon=new ImageIcon(im.getScaledInstance(btn.getWidth(), btn.getHeight(), im.SCALE_SMOOTH));
+//        btn.setIcon(icon);
 //    }
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
