@@ -4,17 +4,30 @@
  */
 package appcoffee;
 
+import com.sun.jdi.connect.spi.Connection;
+import java.beans.Statement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author Admin
  */
 public class frmQuanLy extends javax.swing.JFrame {
 
+    connectSql cntSql;
+    ResultSet rs; // lưu dữ liệu đọc từ SqlDataReader
     /**
      * Creates new form frmQuanLy
      */
     public frmQuanLy() {
         initComponents();
+        String ur = "sa";
+        String ps = "123";
+        String u = "jdbc:sqlserver://localhost:1433;databaseName=QLCaPhe;encrypt=true;trustServerCertificate=true";
+        cntSql = new connectSql(ur, ps, u);
     }
 
     /**
@@ -30,14 +43,14 @@ public class frmQuanLy extends javax.swing.JFrame {
         jTabbedPane2 = new javax.swing.JTabbedPane();
         panelDoanhThu = new javax.swing.JPanel();
         jLabel17 = new javax.swing.JLabel();
-        jComboBox2 = new javax.swing.JComboBox<>();
-        jButton21 = new javax.swing.JButton();
+        cboThang = new javax.swing.JComboBox<>();
+        btnBangThongKe = new javax.swing.JButton();
         jScrollPane5 = new javax.swing.JScrollPane();
-        jTable5 = new javax.swing.JTable();
+        tblDoanhThu = new javax.swing.JTable();
         jLabel18 = new javax.swing.JLabel();
-        jTextField20 = new javax.swing.JTextField();
+        txtTongSL = new javax.swing.JTextField();
         jLabel19 = new javax.swing.JLabel();
-        jTextField21 = new javax.swing.JTextField();
+        txtTongTien = new javax.swing.JTextField();
         panelMon = new javax.swing.JPanel();
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
@@ -123,13 +136,29 @@ public class frmQuanLy extends javax.swing.JFrame {
 
         jTabbedPane2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
+        panelDoanhThu.addComponentListener(new java.awt.event.ComponentAdapter() {
+            public void componentShown(java.awt.event.ComponentEvent evt) {
+                panelDoanhThuComponentShown(evt);
+            }
+        });
+
         jLabel17.setText("Doanh thu theo Tháng");
 
-        jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cboThang.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12" }));
+        cboThang.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                cboThangItemStateChanged(evt);
+            }
+        });
+        cboThang.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cboThangActionPerformed(evt);
+            }
+        });
 
-        jButton21.setText("Bảng thống kê");
+        btnBangThongKe.setText("Bảng thống kê");
 
-        jTable5.setModel(new javax.swing.table.DefaultTableModel(
+        tblDoanhThu.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -137,10 +166,10 @@ public class frmQuanLy extends javax.swing.JFrame {
                 {null, null, null, null}
             },
             new String [] {
-                "Huy", "Phát", "Tiến", "Quân"
+                "Ten Mon", "So Luong", "Tong Tien", "Thang"
             }
         ));
-        jScrollPane5.setViewportView(jTable5);
+        jScrollPane5.setViewportView(tblDoanhThu);
 
         jLabel18.setText("Tổng số lượng");
 
@@ -155,22 +184,22 @@ public class frmQuanLy extends javax.swing.JFrame {
                 .addGroup(panelDoanhThuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jScrollPane5)
                     .addGroup(panelDoanhThuLayout.createSequentialGroup()
-                        .addComponent(jLabel17)
+                        .addComponent(jLabel17, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(cboThang, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButton21)))
+                        .addComponent(btnBangThongKe, javax.swing.GroupLayout.PREFERRED_SIZE, 188, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(37, 37, 37))
             .addGroup(panelDoanhThuLayout.createSequentialGroup()
-                .addGap(126, 126, 126)
-                .addComponent(jLabel18)
+                .addGap(97, 97, 97)
+                .addComponent(jLabel18, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTextField20, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(167, 167, 167)
-                .addComponent(jLabel19)
+                .addComponent(txtTongSL, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(135, 135, 135)
+                .addComponent(jLabel19, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTextField21, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(102, Short.MAX_VALUE))
+                .addComponent(txtTongTien, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(94, Short.MAX_VALUE))
         );
         panelDoanhThuLayout.setVerticalGroup(
             panelDoanhThuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -178,22 +207,27 @@ public class frmQuanLy extends javax.swing.JFrame {
                 .addGap(29, 29, 29)
                 .addGroup(panelDoanhThuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel17)
-                    .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton21))
+                    .addComponent(cboThang, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnBangThongKe))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addGroup(panelDoanhThuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel18)
-                    .addComponent(jTextField20, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtTongSL, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel19)
-                    .addComponent(jTextField21, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtTongTien, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(11, Short.MAX_VALUE))
         );
 
         jTabbedPane2.addTab("Doanh thu", panelDoanhThu);
 
         jButton1.setText("Xem");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         jButton2.setText("Thêm");
 
@@ -803,6 +837,102 @@ public class frmQuanLy extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_jCheckBox4ActionPerformed
 
+    private void cboThangActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cboThangActionPerformed
+        // TODO add your handling code here:
+       int month = Integer.parseInt(cboThang.getSelectedItem().toString());
+       FilterMonth(month);
+    }//GEN-LAST:event_cboThangActionPerformed
+
+    public void update()
+    {
+        int tongSl = 0;
+        double tongTien = 0.0; // Use double to accommodate decimal values
+        DefaultTableModel model = (DefaultTableModel) tblDoanhThu.getModel();
+
+        for (int i = 0; i < model.getRowCount(); i++) {
+        tongSl += Integer.parseInt(model.getValueAt(i, 1).toString());
+        tongTien += Double.parseDouble(model.getValueAt(i, 2).toString()); // Use Double.parseDouble
+    }
+
+    txtTongSL.setText(String.valueOf(tongSl));
+    txtTongTien.setText(String.format("%.1f", tongTien));
+     
+  }
+    
+    public void showDataDoanhThu()
+    {
+           String str = "select Mon.tenMon as [Tên món], COUNT(ChiTietHoaDon.idMon) as [Số lượng], SUM(ChiTietHoaDon.thanhTien) as [Tổng tiền],MONTH(HoaDon.ngayNhap) as [Tháng] from ChiTietHoaDon,Mon,HoaDon where HoaDon.idHoaDon = ChiTietHoaDon.idHoaDon and ChiTietHoaDon.idMon = Mon.idMon and HoaDon.trangThai = 'True' group by Mon.tenMon, MONTH(ngayNhap)";
+        try {   
+       
+        rs = cntSql.getQuery(str);
+        DefaultTableModel tableModel = new DefaultTableModel();
+        tableModel.setColumnIdentifiers(new String[]{"Tên món", "Số lượng", "Tổng tiền", "Tháng"});
+        
+        while (rs.next()) {
+            String tenMon = rs.getString("Tên món");
+            int soLuong = rs.getInt("Số lượng");
+            double tongTien = rs.getDouble("Tổng tiền");
+            int thang = rs.getInt("Tháng");
+            
+            tableModel.addRow(new Object[]{tenMon, soLuong, tongTien, thang});
+        }
+       
+        tblDoanhThu.setModel(tableModel);
+        update();
+
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(rootPane, "KHông lấy được dữ liệu");
+            e.printStackTrace();
+        }
+    }
+    
+    public void FilterMonth(int month)
+    {
+     
+      String sql =  "select Mon.tenMon as [Tên món], COUNT(ChiTietHoaDon.idMon) as [Số lượng], SUM(ChiTietHoaDon.thanhTien) as [Tổng tiền],MONTH(HoaDon.ngayNhap) as [Tháng] from ChiTietHoaDon,Mon,HoaDon where HoaDon.idHoaDon = ChiTietHoaDon.idHoaDon and ChiTietHoaDon.idMon = Mon.idMon and Month(ngayNhap) = " + month + "  group by Mon.tenMon, MONTH(ngayNhap)";
+      
+        try {   
+            rs = cntSql.getQuery(sql);
+            DefaultTableModel tableModel = new DefaultTableModel();
+            tableModel.setColumnIdentifiers(new String[]{"Tên món", "Số lượng", "Tổng tiền", "Tháng"});
+      
+            while (rs.next())
+            {
+                String tenMon = rs.getString("Tên món");
+                int soLuong = rs.getInt("Số lượng");
+                double tongTien = rs.getDouble("Tổng tiền");
+                int thang = rs.getInt("Tháng");
+                tableModel.addRow(new Object[]{tenMon, soLuong, tongTien, thang}); 
+            }
+            tblDoanhThu.setModel(tableModel);
+            tblDoanhThu.repaint();
+            update();
+        }
+        
+        catch (Exception e) {
+            JOptionPane.showMessageDialog(rootPane, "Error");
+            e.printStackTrace();
+        }
+    }
+    
+    
+    
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void panelDoanhThuComponentShown(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_panelDoanhThuComponentShown
+        // TODO add your handling code here:
+        showDataDoanhThu();
+        update();
+    }//GEN-LAST:event_panelDoanhThuComponentShown
+
+    private void cboThangItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cboThangItemStateChanged
+        // TODO add your handling code here:
+        
+    }//GEN-LAST:event_cboThangItemStateChanged
+
     /**
      * @param args the command line arguments
      */
@@ -840,6 +970,8 @@ public class frmQuanLy extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnBangThongKe;
+    private javax.swing.JComboBox<String> cboThang;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton10;
     private javax.swing.JButton jButton11;
@@ -853,7 +985,6 @@ public class frmQuanLy extends javax.swing.JFrame {
     private javax.swing.JButton jButton19;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton20;
-    private javax.swing.JButton jButton21;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
@@ -866,7 +997,6 @@ public class frmQuanLy extends javax.swing.JFrame {
     private javax.swing.JCheckBox jCheckBox3;
     private javax.swing.JCheckBox jCheckBox4;
     private javax.swing.JComboBox<String> jComboBox1;
-    private javax.swing.JComboBox<String> jComboBox2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -901,7 +1031,6 @@ public class frmQuanLy extends javax.swing.JFrame {
     private javax.swing.JTable jTable2;
     private javax.swing.JTable jTable3;
     private javax.swing.JTable jTable4;
-    private javax.swing.JTable jTable5;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField10;
     private javax.swing.JTextField jTextField11;
@@ -914,8 +1043,6 @@ public class frmQuanLy extends javax.swing.JFrame {
     private javax.swing.JTextField jTextField18;
     private javax.swing.JTextField jTextField19;
     private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField20;
-    private javax.swing.JTextField jTextField21;
     private javax.swing.JTextField jTextField3;
     private javax.swing.JTextField jTextField4;
     private javax.swing.JTextField jTextField5;
@@ -930,5 +1057,8 @@ public class frmQuanLy extends javax.swing.JFrame {
     private javax.swing.JPanel panelLoai;
     private javax.swing.JPanel panelMon;
     private javax.swing.JPanel panelTaiKhoan;
+    private javax.swing.JTable tblDoanhThu;
+    private javax.swing.JTextField txtTongSL;
+    private javax.swing.JTextField txtTongTien;
     // End of variables declaration//GEN-END:variables
 }

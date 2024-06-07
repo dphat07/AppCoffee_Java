@@ -8,9 +8,11 @@ import appcoffee.Model.Mon;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
+import java.awt.Image;
 import java.awt.Panel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.sql.ResultSet;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -48,7 +50,7 @@ public class frmMainCoffee extends javax.swing.JFrame {
         
         // hello
         String ur = "sa";
-        String ps = "123456";
+        String ps = "123";
         String u = "jdbc:sqlserver://localhost:1433;databaseName=QLCaPhe;encrypt=true;trustServerCertificate=true";
         cntSql = new connectSql(ur, ps, u);
         
@@ -488,6 +490,11 @@ public class frmMainCoffee extends javax.swing.JFrame {
         jMenu1.add(jSeparator1);
 
         jMenuItem3.setText("Đăng xuất");
+        jMenuItem3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem3ActionPerformed(evt);
+            }
+        });
         jMenu1.add(jMenuItem3);
 
         jMenuBar1.add(jMenu1);
@@ -495,6 +502,11 @@ public class frmMainCoffee extends javax.swing.JFrame {
         jMenu2.setText("Quản Lý");
 
         jMenuItem2.setText("Kho");
+        jMenuItem2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem2ActionPerformed(evt);
+            }
+        });
         jMenu2.add(jMenuItem2);
 
         jMenuBar1.add(jMenu2);
@@ -950,6 +962,17 @@ public class frmMainCoffee extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(rootPane, "Không thể thanh toán khi chưa có sản phẩm!");
     }//GEN-LAST:event_btn_thanhToanActionPerformed
 
+    private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
+        // TODO add your handling code here:
+        frmQuanLy frmQuanLy = new frmQuanLy();
+        frmQuanLy.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_jMenuItem2ActionPerformed
+
+    private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jMenuItem3ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -1228,10 +1251,10 @@ public class frmMainCoffee extends javax.swing.JFrame {
         }
         return id;
     }
-//
+
 //    public void loadHinh(String image)
 //    {
-//        ImageIcon image1=new ImageIcon("src\\qlbanhang_kholinhkiensi\\sanphamcongty_2022\\"+image);
+//        ImageIcon image1=new ImageIcon("src\\image"+image);
 //        Image im=image1.getImage();
 //        ImageIcon icon=new ImageIcon(im.getScaledInstance(lblHinh.getWidth(), 
 //                lblHinh.getHeight(), im.SCALE_SMOOTH));
@@ -1242,16 +1265,15 @@ public class frmMainCoffee extends javax.swing.JFrame {
 //    {
 //        JFileChooser open=new JFileChooser();
 //        // Thiết lập đường dẫn mặc định cho JFileChooser
-//        File defaultDirectory = new File("src\\ASM1\\images");
+//        File defaultDirectory = new File("src\\image");
 //        open.setCurrentDirectory(defaultDirectory);
 //            int kq=open.showOpenDialog(null);
 //            String hinh="";  
-//            if(kq==open.APPROVE_OPTION)
+//            if(kq==JFileChooser.APPROVE_OPTION)
 //            {         
 //                File f=open.getSelectedFile();
 //                String filename=f.getAbsolutePath();
-//                // String []chuoi=filename.split("\\\\");
-//                // hinh=chuoi[chuoi.length-1]; 
+//             
 //                hinh=f.getName();
 //            }
 //           return hinh;

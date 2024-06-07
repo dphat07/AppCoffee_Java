@@ -21,7 +21,7 @@ public class frmLogin extends javax.swing.JFrame {
         initComponents();
         
         String ur = "sa";
-        String ps = "123456";
+        String ps = "123";
         String u = "jdbc:sqlserver://localhost:1433;databaseName=QLCaPhe;encrypt=true;trustServerCertificate=true";
         cntSql = new connectSql(ur, ps, u);
     }
