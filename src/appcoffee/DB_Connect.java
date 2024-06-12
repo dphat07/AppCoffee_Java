@@ -89,9 +89,21 @@ public final class DB_Connect {
         return rs;
     }
     
-    public void GetNonQuery(String sql) throws SQLException {
+    public int getUpdateQuery(String sql)
+    {   
+        try {
+            Statement st = con.createStatement();
+            int count = st.executeUpdate(sql);
+            return count;
+        } catch (SQLException ex) {
+            return 0;
+        }
+    }
+    
+    public int GetNonQuery(String sql) throws SQLException {
         Statement st = con.createStatement();
-        st.executeQuery(sql);
+        int count = st.executeUpdate(sql);
+        return count;
     }
     
     public void closeSQL() throws SQLException {

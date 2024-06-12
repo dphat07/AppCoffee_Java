@@ -20,6 +20,11 @@ public class TaiKhoanController {
         dsTaiKhoan = new ArrayList();
     }
     
+     public TaiKhoanController(ArrayList<TaiKhoan> ds) {
+        this.dsTaiKhoan = ds;
+    }
+
+    
     public void themTK(TaiKhoan tk) {
         dsTaiKhoan.add(tk);
     }
@@ -42,8 +47,8 @@ public class TaiKhoanController {
         }
     }
     
-    public TaiKhoanController init(DB_Connect conn) throws SQLException {
-        TaiKhoanController ds = new TaiKhoanController();
+    public static ArrayList<TaiKhoan> init(DB_Connect conn) throws SQLException {
+        ArrayList<TaiKhoan> ds = new ArrayList();
         String sql = "select * from TaiKhoan";
         ResultSet rs = conn.getReader(sql);
         while(rs.next()) {
@@ -53,8 +58,17 @@ public class TaiKhoanController {
             String matKhau = String.valueOf(rs.getString("matKhau"));
             String chucVu = String.valueOf(rs.getString("chucVu"));
             TaiKhoan tk = new TaiKhoan(id, tenHienThi, tenDangNhap, matKhau, chucVu);
-            ds.themTK(tk);
+            ds.add(tk);
         }
         return ds;
+    }
+    
+    public ArrayList<TaiKhoan> timTaiKhoan(String ten) {
+        ArrayList<TaiKhoan> dstim = new ArrayList();
+        for(TaiKhoan tk : dsTaiKhoan) {
+            if(tk.getTenDangNhap().contains(ten))
+                dstim.add(tk);
+        }
+        return dstim;
     }
 }

@@ -11,12 +11,6 @@ package appcoffee.Model;
 public class Ban {
     int idBan, trangThai;
 
-    public Ban(int idBan, int trangThai, String tenBan) {
-        this.idBan = idBan;
-        this.trangThai = trangThai;
-        this.tenBan = tenBan;
-    }
-
     public int getIdBan() {
         return idBan;
     }
@@ -41,7 +35,23 @@ public class Ban {
         this.tenBan = tenBan;
     }
 
+    public String getImg() {
+        return img;
+    }
+
+    public void setImg(String img) {
+        this.img = img;
+    }
+
+    public Ban(int idBan, int trangThai, String tenBan, String img) {
+        this.idBan = idBan;
+        this.trangThai = trangThai;
+        this.tenBan = tenBan;
+        this.img = img;
+    }
+
     public Ban() {
     }
     String tenBan;
+    String img;
 }

@@ -20,6 +20,10 @@ public class BanController {
         dsBan = new ArrayList();
     }
     
+    public BanController(ArrayList<Ban> ds) {
+        this.dsBan = ds;
+    }
+    
     public void themBan(Ban ban) {
         dsBan.add(ban);
     }
@@ -40,17 +44,35 @@ public class BanController {
         }
     }
     
-    public BanController init(DB_Connect conn) throws SQLException {
-        BanController ds = new BanController();
+    public static ArrayList<Ban> init(DB_Connect conn) throws SQLException {
+        ArrayList<Ban> ds = new ArrayList();
         String sql = "select * from Ban";
         ResultSet rs = conn.getReader(sql);
         while(rs.next()) {
             int idBan = Integer.parseInt(rs.getString("idBan"));
             String ten = String.valueOf(rs.getString("tenBan"));
             int trangThai = Integer.parseInt(rs.getString("trangThai"));
-            Ban ban = new Ban(idBan, trangThai, ten);
-            ds.themBan(ban);
+            String img = String.valueOf(rs.getString("img"));
+            Ban ban = new Ban(idBan, trangThai, ten, img);
+            ds.add(ban);
         }
         return ds;
+    }
+    
+    public ArrayList<Ban> timBan(String ten) {
+        ArrayList<Ban> dstim = new ArrayList();
+        for(Ban ban: dsBan) {
+            if(ban.getTenBan().contains(ten))
+                dstim.add(ban);
+        }
+        return dstim;
+    }
+    
+    public String getImage(int id) {
+        for(Ban ban : dsBan) {
+            if(ban.getIdBan()== id)
+                return ban.getImg();
+        }
+        return "";
     }
 }

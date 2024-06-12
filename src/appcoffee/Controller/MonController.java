@@ -21,12 +21,20 @@ public class MonController {
         dsmon = new ArrayList();
     }
     
-    public MonController(ArrayList<Mon> ds) {
-        dsmon = ds;
+    public MonController(ArrayList<Mon> dsmon) {
+        this.dsmon = dsmon;
     }
-    
+   
     public void themMon(Mon mon) {
         dsmon.add(mon);
+    }
+    
+    public static Mon timMon(MonController ds, int id) {
+        for(Mon mon : ds.dsmon) {
+            if(mon.getIdMon()== id)
+                return mon;
+        }
+        return null;
     }
     
     public void suaMon(Mon mon) {
@@ -60,9 +68,51 @@ public class MonController {
             String ten = String.valueOf(rs.getString("tenMon"));
             String moTa = String.valueOf(rs.getString("moTa"));
             int trangThai = Integer.parseInt(rs.getString("trangThai"));
-            Mon mon = new Mon(idMon, ten, idLoai, gia, moTa, trangThai);
+            String image = String.valueOf(rs.getString("image"));
+            Mon mon = new Mon(idMon, ten, idLoai, gia, moTa, trangThai, image);
             ds.add(mon);
         }
         return ds;
+    }
+    
+    public String getMoTa(int id) {
+        for(Mon mon : dsmon) {
+            if(mon.getIdMon() == id)
+                return mon.getMoTa();
+        }
+        return "";
+    }
+    
+    public String getImage(int id) {
+        for(Mon mon : dsmon) {
+            if(mon.getIdMon() == id)
+                return mon.getImage();
+        }
+        return "";
+    }
+    
+    public ArrayList<Mon> timMon(String ten) {
+        ArrayList<Mon> dstim = new ArrayList();
+        for(Mon mon : dsmon) {
+            if(mon.getTen().contains(ten) || mon.getMoTa().contains(ten))
+                dstim.add(mon);
+        }
+        return dstim;
+    }
+    
+    public String timTenMon(int id) {
+        for(Mon mon : dsmon) {
+            if(mon.getIdMon() == id)
+                return mon.getTen();
+        }
+        return "";
+    }
+    
+    public static int timIDMon(MonController ds, String ten) {
+        for(Mon mon : ds.dsmon) {
+            if(mon.getTen().equals(ten))
+                return mon.getIdMon();
+        }
+        return -1;
     }
 }

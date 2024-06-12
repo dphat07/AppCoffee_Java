@@ -4,22 +4,20 @@
  */
 package appcoffee.Model;
 
-import java.util.ArrayList;
-
 /**
  *
  * @author nqghu
  */
-public class TrangThai_Mon {
+public class TrangThai_Ban {
     int id;
     String ten;
 
-    public TrangThai_Mon(int id, String ten) {
+    public TrangThai_Ban(int id, String ten) {
         this.id = id;
         this.ten = ten;
     }
 
-    public TrangThai_Mon() {
+    public TrangThai_Ban() {
         
     }
 

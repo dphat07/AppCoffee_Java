@@ -17,6 +17,10 @@ import java.util.ArrayList;
  */
 public class LoaiController {
     ArrayList<Loai> dsLoai;
+
+    public LoaiController(ArrayList<Loai> dsLoai) {
+        this.dsLoai = dsLoai;
+    }
     
     public LoaiController() {
         dsLoai = new ArrayList();
@@ -34,16 +38,34 @@ public class LoaiController {
         }
     }
     
-    public LoaiController init(DB_Connect conn) throws SQLException {
-        LoaiController ds = new LoaiController();
+    public static ArrayList<Loai> init(DB_Connect conn) throws SQLException {
+        ArrayList<Loai> ds = new ArrayList();
         String sql = "select * from Loai";
         ResultSet rs = conn.getReader(sql);
         while(rs.next()) {
             int idLoai = Integer.parseInt(rs.getString("idLoai"));
             String ten = String.valueOf(rs.getString("tenLoai"));
             Loai loai = new Loai(idLoai, ten);
-            ds.themLoai(loai);
+            ds.add(loai);
         }
         return ds;
     }
+    
+    public static Loai timLoai(LoaiController ds, int id) {
+        for(Loai loai : ds.dsLoai) {
+            if(loai.getIdLoai() == id)
+                return loai;
+        }
+        return null;
+    }
+    
+    public ArrayList<Loai> timLoai_Ten(String ten) {
+        ArrayList<Loai> dstim = new ArrayList();
+        for(Loai loai: dsLoai) {
+            if(loai.getTenLoai().contains(ten))
+                dstim.add(loai);
+        }
+        return dstim;
+    }
+
 }

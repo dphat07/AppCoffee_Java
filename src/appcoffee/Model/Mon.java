@@ -15,6 +15,7 @@ public class Mon {
     int gia;
     String moTa;
     int trangThai;
+    String image;
 
     public int getIdMon() {
         return idMon;
@@ -66,13 +67,27 @@ public class Mon {
 
     public Mon() {
     }
+    
+    @Override
+    public String toString() {
+        return ten;
+    }   
 
-    public Mon(int idMon, String ten, int idLoai, int gia, String moTa, int trangThai) {
+    public Mon(int idMon, String ten, int idLoai, int gia, String moTa, int trangThai, String image) {
         this.idMon = idMon;
         this.ten = ten;
         this.idLoai = idLoai;
         this.gia = gia;
         this.moTa = moTa;
         this.trangThai = trangThai;
+        this.image = image;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
     }
 }
